@@ -1,7 +1,7 @@
 import { App } from '@cdfzo/kh'
 
 const app = new App({
-  locale: 'en-US',
+  locales: ['en-US', 'de-DE'],
 })
 
 app.listen(3000)

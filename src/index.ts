@@ -1,12 +1,15 @@
+import { I18n, Locale } from './utils/i18n'
+
 type Config = {
-  locale: string
+  locales: string[]
 }
 
-class App {
-  locale
+export class App {
+  i18n
+  t!: Locale
 
   constructor(config: Config) {
-    this.locale = config.locale
+    this.i18n = new I18n(config)
   }
 
   listen = (port: number) => {
@@ -15,10 +18,12 @@ class App {
       port,
       fetch: (req) => {
         const url = new URL(req.url)
+        this.t = this.i18n.translation(req)
+
         return new Response(`NOT_FOUND: ${url.pathname}`)
       },
     })
   }
 }
 
-export { App }
+export type { Config, Locale }
