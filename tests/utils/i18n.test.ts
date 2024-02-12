@@ -14,8 +14,6 @@ const preferredLocale = (locales: string[], accept: string) => {
   const i18n = new I18n({ locales })
   const req = request(accept)
 
-  console.log(i18n)
-
   return i18n.preferredLocale(req)
 }
 
