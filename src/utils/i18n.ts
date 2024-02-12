@@ -13,8 +13,9 @@ export class I18n {
     for (const locale of config.locales?.reverse() ?? []) {
       this.available[locale.slice(0, 2)] = locale
       this.available[locale] = locale
-      this.translations[locale] =
-        require(`${process.cwd()}/src/locales/${locale}`).locale
+      this.translations[locale] = require(`${
+        Bun.env.cwd ?? process.cwd()
+      }/src/locales/${locale}`).locale
     }
   }
 
@@ -26,8 +27,8 @@ export class I18n {
       req.headers
         .get('accept-language')
         ?.match(/[a-z]{2}(-[A-Z]{2})?/g)
-        ?.find((locale) => locale in this.available) ?? this.default
-    ]
+        ?.find((locale) => locale in this.available) as string
+    ] ?? this.default
 
   /**
    * Gets the translation for the preferred locale.
