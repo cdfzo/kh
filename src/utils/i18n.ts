@@ -8,9 +8,9 @@ export class I18n {
   default: string
 
   constructor(config: Config) {
-    this.default = config.locales[0] ?? 'en-US'
+    this.default = config.locales?.[0] ?? 'en-US'
 
-    for (const locale of config.locales.reverse()) {
+    for (const locale of config.locales?.reverse() ?? []) {
       this.available[locale.slice(0, 2)] = locale
       this.available[locale] = locale
       this.translations[locale] =

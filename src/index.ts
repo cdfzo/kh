@@ -1,7 +1,7 @@
 import { I18n, Locale } from './utils/i18n'
 
 type Config = {
-  locales: string[]
+  locales?: string[]
 }
 
 export class App {
