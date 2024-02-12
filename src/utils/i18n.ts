@@ -7,7 +7,7 @@ export class I18n {
   private translations: Record<string, Locale> = {}
   default: string
 
-  constructor(config: Config) {
+  constructor(config: Config = {}) {
     this.default = config.locales?.[0] ?? 'en-US'
 
     for (const locale of config.locales?.reverse() ?? []) {
