@@ -5,5 +5,5 @@ auto = 'disable'
 
 [test]
 coverage = true
-coverageThreshold = { line = 1, function = 1, statement = 1 }
+coverageThreshold = 1
 root = 'tests'
