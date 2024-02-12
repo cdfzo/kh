@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "strict": true,
+    "paths": {
+      "@cdfzo/kh": ["./src/index.ts"]
+    }
+  }
+}
