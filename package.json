@@ -5,8 +5,8 @@
   "author": "cdfzo",
   "license": "MIT",
   "homepage": "https://github.com/cdfzo/kh#readme",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "keywords": [
     "bun",
     "http",
@@ -16,7 +16,7 @@
     "dev": "cd examples/template && bun run src/index.ts",
     "lint": "bunx --bun eslint .",
     "test": "bun test",
-    "build": "bun build src/index.ts --outfile dist/index.js --minify && bunx --bun tsc src/index.ts --outFile dist/index -d --module nodenext --emitDeclarationOnly"
+    "build": "bun run src/build.ts"
   },
   "repository": {
     "type": "git",
@@ -33,10 +33,5 @@
   },
   "peerDependencies": {
     "typescript": "^5.3.0"
-  },
-  "peerDependenciesMeta": {
-    "typescript": {
-      "optional": true
-    }
   }
 }

@@ -4,8 +4,8 @@ Elevating web developer experience
 
 ## Contributing
 
-See [Contributing Guide](CONTRIBUTING.md) and please follow
-the [Code of Conduct](CODE_OF_CONDUCT.md).
+See [Contributing Guide][CONTRIBUTING.md] and please follow
+the [Code of Conduct][CODE_OF_CONDUCT.md].
 
 ## License
 
@@ -19,3 +19,5 @@ kh is available as open source under the terms of the [MIT License][MIT].
 [tests]: https://github.com/cdfzo/kh/tree/main/tests
 [MIT]: https://github.com/cdfzo/kh/blob/main/LICENSE
 [release]: https://github.com/cdfzo/kh/releases/latest
+[CONTRIBUTING.md]: https://github.com/cdfzo/kh/blob/main/CONTRIBUTING.md
+[CODE_OF_CONDUCT.md]: https://github.com/cdfzo/kh/blob/main/CODE_OF_CONDUCT.md
