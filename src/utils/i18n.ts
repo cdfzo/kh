@@ -42,5 +42,5 @@ export class I18n {
   /**
    * Gets the translation for a locale.
    */
-  translation = (locale: string) => this.translations[locale]
+  translate = (locale: string) => this.translations[locale]
 }

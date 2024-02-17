@@ -2,8 +2,8 @@ import { I18n, Locale } from './utils/i18n'
 import { Server } from './utils/server'
 
 export class App {
-  private i18n: I18n
-  private server: Server
+  i18n: I18n
+  server: Server
 
   constructor() {
     this.i18n = new I18n(this)
