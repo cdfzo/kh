@@ -1,7 +1,6 @@
 import { App } from '@cdfzo/kh'
 
-const app = new App({
-  locales: ['en-US', 'de-DE'],
-})
+new App()
+  .useLocales('en-US', 'de-DE')
 
-app.listen(3000)
+  .listen(3000)
