@@ -8,15 +8,15 @@ export class Server {
   /**
    * Starts the server.
    */
-  private listen = (_app: App, port: number) => {
+  private listen = (app: App, port: number) => {
     Bun.serve({
       hostname: '0.0.0.0',
       port,
       fetch: (req) => {
-        // TODO: Implement routing
         const url = new URL(req.url)
+        const route = app.router.resolve(req.method, url.pathname)
 
-        return new Response(`NOT_FOUND: ${url.pathname}`)
+        return new Response(route)
       },
     })
   }
