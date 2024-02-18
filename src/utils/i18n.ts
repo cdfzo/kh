@@ -1,28 +1,37 @@
-import { Config } from '../index'
+import { App } from '../index'
 
-export type Locale = Record<string, string>
+export type Locale = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export class I18n {
   private available: Record<string, string> = {}
   private translations: Record<string, Locale> = {}
-  default: string
+  default!: string
 
-  constructor(config: Config = {}) {
-    this.default = config.locales?.[0] ?? 'en-US'
+  constructor(app: App) {
+    app.useLocales = (...locales) => this.useLocales(app, ...locales)
+  }
 
-    for (const locale of config.locales?.reverse() ?? []) {
+  /**
+   * Loads and sets up locales and translations.
+   */
+  private useLocales = (app: App, ...locales: string[]) => {
+    this.default = locales[0] ?? 'en-US'
+
+    for (const locale of locales.reverse() ?? []) {
       this.available[locale.slice(0, 2)] = locale
       this.available[locale] = locale
       this.translations[locale] = require(`${
         Bun.env.cwd ?? process.cwd()
       }/src/locales/${locale}`).locale
     }
+
+    return app
   }
 
   /**
    * Gets the preferred locale from the request headers.
    */
-  preferredLocale = (req: Request) =>
+  preferred = (req: Request) =>
     this.available[
       req.headers
         .get('accept-language')
@@ -31,7 +40,7 @@ export class I18n {
     ] ?? this.default
 
   /**
-   * Gets the translation for the preferred locale.
+   * Gets the translation for a locale.
    */
-  translation = (req: Request) => this.translations[this.preferredLocale(req)]
+  translate = (locale: string) => this.translations[locale]
 }

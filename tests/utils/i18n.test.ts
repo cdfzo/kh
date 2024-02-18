@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test'
-import { I18n } from '../../src/utils/i18n'
+import { App } from '@cdfzo/kh'
 
-const request = (accept: string) => {
+const acceptLanguage = (accept: string) => {
   const req = new Request('http://localhost:3000')
   req.headers.append('accept-language', accept)
 
@@ -10,62 +10,54 @@ const request = (accept: string) => {
 
 Bun.env.cwd = '../../tests/dummy'
 
-const preferredLocale = (locales: string[], accept: string) => {
-  const i18n = new I18n({ locales })
-  const req = request(accept)
+describe('#preferred', () => {
+  it('sets first locale as default', () => {
+    const app = new App().useLocales('en-US', 'de-DE', 'de-AT')
 
-  return i18n.preferredLocale(req)
-}
+    expect(app.i18n.default).toBe('en-US')
+  })
 
-describe('preferred locale', () => {
   it('uses first matching locale', () => {
-    const locales = ['en-US', 'de-DE', 'de-AT']
-    const accept = 'de-DE'
+    const app = new App().useLocales('en-US', 'de-DE', 'de-AT')
 
-    expect(preferredLocale(locales, accept)).toEqual('de-DE')
+    expect(app.i18n.preferred(acceptLanguage('de-DE'))).toBe('de-DE')
   })
 
   it('defaults to first matching language if no region is given', () => {
-    const locales = ['en-US', 'de-DE', 'de-AT']
-    const accept = 'de'
+    const app = new App().useLocales('en-US', 'de-DE', 'de-AT')
 
-    expect(preferredLocale(locales, accept)).toEqual('de-DE')
+    expect(app.i18n.preferred(acceptLanguage('de'))).toBe('de-DE')
   })
 
-  it('defaults to first locale if preferred locale is not available', () => {
-    const locales = ['en-US', 'de-DE', 'de-AT']
-    const accept = 'ja-JP'
+  it('uses default locale if preferred locale is not available', () => {
+    const app = new App().useLocales('en-US', 'de-DE', 'de-AT')
 
-    expect(preferredLocale(locales, accept)).toEqual('en-US')
+    expect(app.i18n.preferred(acceptLanguage('ja-JP'))).toBe('en-US')
   })
 
-  it('defaults to first locale if preferred locale is invalid', () => {
-    const locales = ['en-US', 'de-DE', 'de-AT']
-    const accept = 'invalid locale'
+  it('uses default locale if preferred locale is invalid', () => {
+    const app = new App().useLocales('en-US', 'de-DE', 'de-AT')
 
-    expect(preferredLocale(locales, accept)).toEqual('en-US')
+    expect(app.i18n.preferred(acceptLanguage('invalid locale'))).toBe('en-US')
   })
 
-  it('defaults to first locale if preferred locale is not set', () => {
-    const locales = ['en-US', 'de-DE', 'de-AT']
-    const accept = ''
+  it('uses default locale if preferred locale is not set', () => {
+    const app = new App().useLocales('en-US', 'de-DE', 'de-AT')
 
-    expect(preferredLocale(locales, accept)).toEqual('en-US')
+    expect(app.i18n.preferred(acceptLanguage(''))).toBe('en-US')
   })
 
   it('defaults to en-US if locales are not set', () => {
-    const locales: string[] = []
-    const accept = 'de-DE'
+    const app = new App().useLocales()
 
-    expect(preferredLocale(locales, accept)).toEqual('en-US')
+    expect(app.i18n.preferred(acceptLanguage('de-DE'))).toBe('en-US')
   })
 })
 
-describe('translation', () => {
-  it('uses first matching locale', () => {
-    const i18n = new I18n({ locales: ['en-US'] })
-    const req = request('en-US')
+describe('#translate', () => {
+  it('translates the preferred locale', () => {
+    const app = new App().useLocales('en-US')
 
-    expect(i18n.translation(req)).toEqual({ hello: 'Hello World' })
+    expect(app.i18n.translate('en-US')).toEqual({ hello: 'Hello World' })
   })
 })

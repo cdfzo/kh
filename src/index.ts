@@ -1,29 +1,17 @@
 import { I18n, Locale } from './utils/i18n'
-
-type Config = {
-  locales?: string[]
-}
+import { Server } from './utils/server'
 
 export class App {
-  i18n
-  t!: Locale
+  i18n: I18n
+  server: Server
 
-  constructor(config: Config) {
-    this.i18n = new I18n(config)
+  constructor() {
+    this.i18n = new I18n(this)
+    this.server = new Server(this)
   }
 
-  listen = (port: number) => {
-    Bun.serve({
-      hostname: '0.0.0.0',
-      port,
-      fetch: (req) => {
-        const url = new URL(req.url)
-        this.t = this.i18n.translation(req)
-
-        return new Response(`NOT_FOUND: ${url.pathname}`)
-      },
-    })
-  }
+  useLocales!: (...locales: string[]) => this
+  listen!: (port: number) => void
 }
 
-export type { Config, Locale }
+export type { Locale }
