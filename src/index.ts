@@ -7,6 +7,10 @@ export class App {
   router: Router
   server: Server
 
+  req!: Request
+  url!: URL
+  params: Record<string, string> = {}
+
   constructor() {
     this.i18n = new I18n(this)
     this.router = new Router(this)

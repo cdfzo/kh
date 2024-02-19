@@ -13,10 +13,12 @@ export class Server {
       hostname: '0.0.0.0',
       port,
       fetch: (req) => {
-        const url = new URL(req.url)
-        const route = app.router.resolve(req.method, url.pathname)
+        app.req = req
+        app.url = new URL(req.url)
 
-        return new Response(route)
+        const route = app.router.resolve(app)
+
+        return new Response(route.controller[route.action](app))
       },
     })
   }

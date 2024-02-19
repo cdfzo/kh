@@ -2,10 +2,17 @@ import { App } from '../index'
 
 type RequestMethod = (path: string, action: string) => App
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
+type Routes = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
+
+type Route = {
+  controller: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  action: string
+  params?: string[]
+}
 
 export class Router {
   private methods: HttpMethod[] = ['GET', 'POST', 'PUT', 'DELETE']
-  private routes: Record<string, any> = {} // eslint-disable-line @typescript-eslint/no-explicit-any
+  private routes: Routes = {}
 
   constructor(app: App) {
     this.addMethods(app)
@@ -27,28 +34,54 @@ export class Router {
   /**
    * Defines a new route.
    */
-  private set = (method: string, path: string, action: string) => {
-    let route = this.routes
+  private set = (method: string, path: string, handler: string) => {
+    const [name, action] = handler.split('#')
+    const Controller = require(`${
+      Bun.env.cwd ?? process.cwd()
+    }/src/controllers/${name}`).default
+    const route: Route = { controller: new Controller(), action }
 
-    for (const part of `${path}/`.split('/')) {
-      route = route[part] ||= {}
+    let routes = this.routes
+
+    for (let part of `${path.slice(1)}/`.split('/')) {
+      if (part.startsWith(':')) {
+        route.params ||= []
+        route.params.push(part.slice(1))
+        part = '*'
+      }
+
+      routes = routes[part] ||= {}
     }
 
-    route[method] = action
+    routes[method] = route
+  }
+
+  /**
+   * Saves a parameter from the URL and returns the route.
+   */
+  private param = (params: string[], route: Routes, part: string) => {
+    params.push(part)
+
+    return route['*']
   }
 
   /**
    * Resolves a URL.
    * @returns controller#action
    */
-  resolve = (method: string, path: string) => {
+  resolve = (app: App) => {
+    const paths = `${app.url.pathname.slice(1)}//${app.req.method}`.split('/')
+    const params: string[] = []
     let route = this.routes
 
-    for (const part of `${path.slice(1)}//${method}`.split('/')) {
-      if (!(route = route[part] ?? route['*'])) {
+    for (const part of paths) {
+      if (!(route = route[part] ?? this.param(params, route, part))) {
         return this.routes.error[''].GET
       }
     }
+
+    app.params = {}
+    params.forEach((param, i) => (app.params[route.params![i]] = param))
 
     return route
   }
